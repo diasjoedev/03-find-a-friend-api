@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -16,6 +15,7 @@ datasource db {
 
 model Org {
   id            String   @id @default(cuid())
+  orgName       String   @map("org_name")
   responsible   String
   zipCode       String
   address       String
