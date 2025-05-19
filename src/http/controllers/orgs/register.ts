@@ -1,34 +1,66 @@
+import { OrgAlreadyExistsError } from '@/use-cases/errors/org-already-exists-error'
+import { makeRegisterOrgUseCase } from '@/use-cases/factories/make-register-org-use-case'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   const registerBobySchema = z.object({
+    orgName: z.string(),
     responsible: z.string(),
-    zipcode: z.string().min(8),
+    zipCode: z.string().min(8),
     address: z.string(),
     whatsapp: z.string().min(11),
     email: z.string().email(),
     password: z.string().min(6),
+    city: z.string(),
+    state: z.string(),
   })
 
-  const { address, email, responsible, password, whatsapp, zipcode } =
-    registerBobySchema.parse(request.body)
+  const {
+    city,
+    orgName,
+    state,
+    address,
+    email,
+    responsible,
+    password,
+    whatsapp,
+    zipCode,
+  } = registerBobySchema.parse(request.body)
 
-  // try {
-  // } catch (err) {
-  //   throw err
-  // }
+  try {
+    const registerOrgsUseCase = makeRegisterOrgUseCase()
+
+    await registerOrgsUseCase.execute({
+      city,
+      orgName,
+      state,
+      address,
+      email,
+      responsible,
+      password,
+      whatsapp,
+      zipCode,
+    })
+  } catch (err) {
+    if (err instanceof OrgAlreadyExistsError) {
+      return reply.status(409).send({ message: err.message })
+    }
+
+    throw err
+  }
 
   return reply
     .status(201)
-    .send({ address, email, responsible, password, whatsapp, zipcode })
+    .send({
+      city,
+      orgName,
+      state,
+      address,
+      email,
+      responsible,
+      password,
+      whatsapp,
+      zipCode,
+    })
 }
-
-/**
- * nome do responsável
-e mail
-cep
-endereco
-Whatsapp
-Senha
- */
