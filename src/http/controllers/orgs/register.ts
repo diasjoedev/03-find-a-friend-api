@@ -31,7 +31,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
   try {
     const registerOrgsUseCase = makeRegisterOrgUseCase()
 
-    await registerOrgsUseCase.execute({
+    const { org } = await registerOrgsUseCase.execute({
       city,
       orgName,
       state,
@@ -42,6 +42,8 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       whatsapp,
       zipCode,
     })
+
+    return reply.status(201).send({ orgId: org.id })
   } catch (err) {
     if (err instanceof OrgAlreadyExistsError) {
       return reply.status(409).send({ message: err.message })
@@ -49,18 +51,4 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
 
     throw err
   }
-
-  return reply
-    .status(201)
-    .send({
-      city,
-      orgName,
-      state,
-      address,
-      email,
-      responsible,
-      password,
-      whatsapp,
-      zipCode,
-    })
 }

@@ -1,9 +1,9 @@
 services:
   api-findfriend-pg:
-    image: bitnami/postgresql
+    image: postgres:latest
     ports:
       - 5435:5432
     environment:
-      - POSTGRESQL_USERNAME=docker
-      - POSTGRESQL_PASSWORD=docker
-      - POSTGRESQL_DATABASE=findafriend
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=findafriend
