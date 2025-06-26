@@ -13,6 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PetEnergy {
+  VERY_LOW
+  LOW
+  NORMAL
+  HIGH
+  VERY_HIGH
+}
+
 model Org {
   id            String   @id @default(cuid())
   orgName       String   @map("org_name")
@@ -26,6 +34,22 @@ model Org {
   password_hash String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  Pet           Pet[]
 
   @@map("orgs")
+}
+
+model Pet {
+  id                      String   @id @default(cuid())
+  name                    String
+  photos                  String[]
+  description             String
+  energy                  PetEnergy
+  environment             String
+  size                    String
+  requirementsForAdoption String[]
+  org                     Org      @relation(fields: [orgId], references: [id])
+  orgId                   String
+
+  @@map("pets")
 }
