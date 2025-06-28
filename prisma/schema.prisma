@@ -34,13 +34,15 @@ model Org {
   password_hash String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  latitude      Decimal
+  longitude     Decimal
   Pet           Pet[]
 
   @@map("orgs")
 }
 
 model Pet {
-  id                      String   @id @default(cuid())
+  id                      String    @id @default(cuid())
   name                    String
   photos                  String[]
   description             String
@@ -48,7 +50,7 @@ model Pet {
   environment             String
   size                    String
   requirementsForAdoption String[]
-  org                     Org      @relation(fields: [orgId], references: [id])
+  org                     Org       @relation(fields: [orgId], references: [id])
   orgId                   String
 
   @@map("pets")

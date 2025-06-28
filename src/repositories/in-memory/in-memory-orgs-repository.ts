@@ -9,6 +9,11 @@ export class InMemoryOrgsRepository implements OrgsRepository {
     return org ?? null
   }
 
+  async findById(id: string): Promise<Org | null> {
+    const org = this.items.find((item) => item.id === id)
+    return org ?? null
+  }
+
   async create(data: Prisma.OrgCreateInput) {
     const org = {
       id: data.id ?? 'default-id',
@@ -21,6 +26,8 @@ export class InMemoryOrgsRepository implements OrgsRepository {
       whatsapp: data.whatsapp,
       email: data.email,
       password_hash: data.password_hash,
+      latitude: new Prisma.Decimal(data.latitude.toString()),
+      longitude: new Prisma.Decimal(data.longitude.toString()),
       createdAt: new Date(),
       updatedAt: new Date(),
     }

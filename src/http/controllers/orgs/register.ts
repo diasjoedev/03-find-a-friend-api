@@ -14,6 +14,12 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     password: z.string().min(6),
     city: z.string(),
     state: z.string(),
+    latitude: z.number().refine((value) => {
+      return Math.abs(value) <= 90
+    }),
+    longitude: z.number().refine((value) => {
+      return Math.abs(value) <= 180
+    }),
   })
 
   const {
@@ -26,6 +32,8 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     password,
     whatsapp,
     zipCode,
+    latitude,
+    longitude
   } = registerBobySchema.parse(request.body)
 
   try {
@@ -41,6 +49,8 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       password,
       whatsapp,
       zipCode,
+      latitude,
+      longitude
     })
 
     return reply.status(201).send({ orgId: org.id })

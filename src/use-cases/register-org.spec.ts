@@ -24,6 +24,8 @@ describe('Register Org Use Case', () => {
       state: 'SP',
       zipCode: '12345678',
       whatsapp: '11999999999',
+      longitude: -22.7807984,
+      latitude: -43.3046486,
       orgName: 'Dog & Cat Heroes Company',
     })
 
@@ -41,6 +43,8 @@ describe('Register Org Use Case', () => {
       zipCode: '12345678',
       whatsapp: '11999999999',
       orgName: 'Dog & Cat Heroes Company',
+      longitude: -22.7807984,
+      latitude: -43.3046486,
     })
 
     const isPasswordCorrectlyHashed = await compare('123456', org.password_hash)
@@ -60,6 +64,8 @@ describe('Register Org Use Case', () => {
       zipCode: '12345678',
       whatsapp: '11999999999',
       orgName: 'Dog & Cat Heroes Company',
+      longitude: -22.7807984,
+      latitude: -43.3046486,
     })
 
     // Implicit return funtion on expect | arrow function without {}
@@ -74,6 +80,8 @@ describe('Register Org Use Case', () => {
         zipCode: '12345678',
         whatsapp: '11999999999',
         orgName: 'Dog & Cat Heroes Company',
+        longitude: -22.7807984,
+        latitude: -43.3046486,
       }),
     ).rejects.toBeInstanceOf(OrgAlreadyExistsError)
   })

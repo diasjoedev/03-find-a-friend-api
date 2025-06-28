@@ -13,16 +13,19 @@ interface RegisterOrgUseCaseRequest {
   whatsapp: string
   email: string
   password: string
+  latitude: number
+  longitude: number
 }
 
 interface RegisterOrgUseCaseResponse {
-    org: Org
+  org: Org
 }
 
 export class RegisterOrgUseCase {
   constructor(private orgsRepository: OrgsRepository) {}
-// TODO: write tests for this use case
-  async execute({  responsible,
+  // TODO: write tests for this use case
+  async execute({
+    responsible,
     orgName,
     zipCode,
     address,
@@ -30,13 +33,15 @@ export class RegisterOrgUseCase {
     state,
     whatsapp,
     email,
-    password }: RegisterOrgUseCaseRequest):Promise<RegisterOrgUseCaseResponse> {
-    
+    password,
+    latitude,
+    longitude,
+  }: RegisterOrgUseCaseRequest): Promise<RegisterOrgUseCaseResponse> {
     const password_hash = await hash(password, 6)
     const existingOrg = await this.orgsRepository.findByEmail(email)
-    
-    if (existingOrg) { 
-        throw new OrgAlreadyExistsError()
+
+    if (existingOrg) {
+      throw new OrgAlreadyExistsError()
     }
 
     const org = await this.orgsRepository.create({
@@ -48,11 +53,13 @@ export class RegisterOrgUseCase {
       state,
       whatsapp,
       email,
-      password_hash
+      password_hash,
+      latitude,
+      longitude,
     })
 
     return {
-      org
+      org,
     }
   }
 }
