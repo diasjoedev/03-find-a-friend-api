@@ -24,17 +24,19 @@ export async function authenticate(
     })
 
     const token = await reply.jwtSign(
+      {},
       {
         sign: {
           sub: org.id,
+          expiresIn: '7d',
         },
       },
     )
 
     const refreshToken = await reply.jwtSign(
+      {},
       {
         sign: {
-          sub: org.id,
           expiresIn: '7d',
         },
       },

@@ -8,7 +8,6 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     description: z.string(),
     energy: z.enum(['VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH']),
     environment: z.string(),
-    orgId: z.string(),
     photos: z.array(z.string()),
     requirementsForAdoption: z.array(z.string()),
     size: z.string(),
@@ -19,7 +18,6 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     description,
     energy,
     environment,
-    orgId,
     photos,
     requirementsForAdoption,
     size,
@@ -33,13 +31,13 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       description,
       energy,
       environment,
-      orgId,
+      orgId: request.user.sub,
       photos,
       requirementsForAdoption,
       size,
     })
 
-    return reply.status(201).send({ pet })
+    return reply.status(201).send({ ...pet })
   } catch (error) {
     if (error instanceof Error) {
       return reply.status(400).send({ message: error.message })
