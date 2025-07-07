@@ -2,15 +2,25 @@ import { makeRegisterPetUseCase } from '@/use-cases/factories/make-register-pet-
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
+
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   const registerPetBodySchema = z.object({
     name: z.string(),
     description: z.string(),
     energy: z.enum(['VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH']),
-    environment: z.string(),
+    environment: z.enum([
+      'SPACIOUS_INDOOR',
+      'SPACIOUS_OUTDOOR',
+      'SMALL_INDOOR',
+      'SMALL_OUTDOOR',
+      'MEDIUM_INDOOR',
+      'MEDIUM_OUTDOOR',
+      'LARGE_INDOOR',
+      'LARGE_OUTDOOR',
+    ]),
     photos: z.array(z.string()),
     requirementsForAdoption: z.array(z.string()),
-    size: z.string(),
+    size: z.enum(['VERY_SMALL', 'SMALL', 'MEDIUM', 'LARGE', 'VERY_LARGE']),
   })
 
   const {

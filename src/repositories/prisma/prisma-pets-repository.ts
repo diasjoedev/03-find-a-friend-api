@@ -21,4 +21,19 @@ export class PrismaPetsRepository implements PetsRepository {
     const pets = await prisma.pet.findMany()
     return pets
   }
+
+  async findByOrganizations(orgs: string[], page: number = 1): Promise<Pet[] | null> {
+    const pets = await prisma.pet.findMany({
+      where: {
+        orgId: {
+          in: orgs,
+        },
+      },
+    })
+    
+    if(pets.length<=0)return null 
+   
+    const paginatedPets = pets.slice((page - 1) * 20, page * 20)
+    return paginatedPets
+  }
 }

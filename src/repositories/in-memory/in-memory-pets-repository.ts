@@ -5,6 +5,13 @@ import { PetsRepository } from '../pets-repository'
 export class InMemoryPetsRepository implements PetsRepository {
   public items: Pet[] = []
 
+  async findByOrganizations(orgs: string[], page: number = 1) {
+    const orgIdSet = new Set(orgs)
+    return this.items
+      .filter((pet) => orgIdSet.has(pet.orgId))
+      .slice((page - 1) * 20, page * 20)
+  }
+
   async findById(id: string) {
     const pet = this.items.find((pet) => pet.id === id)
     return pet ?? null
