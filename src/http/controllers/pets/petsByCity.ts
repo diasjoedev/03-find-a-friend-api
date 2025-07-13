@@ -6,15 +6,40 @@ export async function petsByCity(request: FastifyRequest, reply: FastifyReply) {
   const getPetByCityParamsSchema = z.object({
     city: z.string(),
     page: z.coerce.number().min(1).default(1),
+    energy: z
+      .enum(['VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH'])
+      .optional(),
+    environment: z
+      .enum([
+        'SPACIOUS_INDOOR',
+        'SPACIOUS_OUTDOOR',
+        'SMALL_INDOOR',
+        'SMALL_OUTDOOR',
+        'MEDIUM_INDOOR',
+        'MEDIUM_OUTDOOR',
+        'LARGE_INDOOR',
+        'LARGE_OUTDOOR',
+      ])
+      .optional(),
+    size: z
+      .enum(['VERY_SMALL', 'SMALL', 'MEDIUM', 'LARGE', 'VERY_LARGE'])
+      .optional(),
   })
-  const { city, page } = getPetByCityParamsSchema.parse(request.query)
- 
-  console.log(city)
+  const { city, page, energy, environment, size } =
+    getPetByCityParamsSchema.parse(request.query)
+
+  
 
   try {
     const getPetsByCitiesUseCase = makeGetPetsByCitiesUseCase()
 
-    const { pets } = await getPetsByCitiesUseCase.execute({ city, page })
+    const { pets } = await getPetsByCitiesUseCase.execute({
+      city,
+      page,
+      energy,
+      environment,
+      size,
+    })
 
     return reply.status(200).send(pets)
   } catch (error) {

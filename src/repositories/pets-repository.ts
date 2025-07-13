@@ -1,7 +1,18 @@
-import { Pet, Prisma } from '@prisma/client'
+import { Pet, PetEnergy, PetEnvironment, PetSize, Prisma } from '@prisma/client'
+
+export interface PetFilters {
+  energy?: PetEnergy
+  environment?: PetEnvironment
+  size?: PetSize
+}
+
 export interface PetsRepository {
   create(data: Prisma.PetCreateInput): Promise<Pet>
-  findById(id: string):Promise<Pet|null>
-  findByOrganizations(orgs:string[], page?: number):Promise<Pet[]|null>
-  findMany():Promise<Pet[]>
+  findById(id: string): Promise<Pet | null>
+  findByOrganizations(
+    orgs: string[],
+    page?: number,
+    filters?: PetFilters,
+  ): Promise<Pet[] | null>
+  findMany(): Promise<Pet[]>
 }
