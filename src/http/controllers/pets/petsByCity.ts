@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 export async function petsByCity(request: FastifyRequest, reply: FastifyReply) {
   const getPetByCityParamsSchema = z.object({
-    city: z.string(),
+    city: z.string().nonempty(),
     page: z.coerce.number().min(1).default(1),
     energy: z
       .enum(['VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH'])
@@ -28,8 +28,6 @@ export async function petsByCity(request: FastifyRequest, reply: FastifyReply) {
   const { city, page, energy, environment, size } =
     getPetByCityParamsSchema.parse(request.query)
 
-  
-
   try {
     const getPetsByCitiesUseCase = makeGetPetsByCitiesUseCase()
 
@@ -41,7 +39,7 @@ export async function petsByCity(request: FastifyRequest, reply: FastifyReply) {
       size,
     })
 
-    return reply.status(200).send(pets)
+    return reply.status(200).send({ pets })
   } catch (error) {
     if (error instanceof Error) {
       return reply.status(400).send({ message: error.message })

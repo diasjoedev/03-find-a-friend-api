@@ -1,17 +1,22 @@
 import { app } from '@/app'
 import { PrismaClient } from '@prisma/client'
 import { hash } from 'bcryptjs'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const prisma = new PrismaClient()
 
 describe('Authenticate Controller (E2E)', () => {
   beforeEach(async () => {
+    await app.ready()
     await prisma.org.deleteMany()
   })
 
   afterEach(async () => {
     await prisma.org.deleteMany()
+  })
+
+  afterAll(async () => {
+    await app.close()
   })
 
   it('should be able to authenticate an organization', async () => {

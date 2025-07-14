@@ -33,7 +33,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     whatsapp,
     zipCode,
     latitude,
-    longitude
+    longitude,
   } = registerBobySchema.parse(request.body)
 
   try {
@@ -50,7 +50,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       whatsapp,
       zipCode,
       latitude,
-      longitude
+      longitude,
     })
 
     return reply.status(201).send({ orgId: org.id })
