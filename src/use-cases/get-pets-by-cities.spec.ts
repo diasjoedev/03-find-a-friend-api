@@ -148,6 +148,70 @@ describe('Get Pets By Cities Use Case', () => {
     expect(pets).toHaveLength(0)
   })
 
+  it('it should be possible to filter pets by their characteristics', async () => {
+    // Criar pets para a primeira organização
+    await petsRepository.create({
+      name: 'Alfredinho',
+      description: 'Um lindo doguinho de 3 anos',
+      energy: 'HIGH',
+      environment: 'SMALL_INDOOR',
+      size: 'MEDIUM',
+      photos: ['url1', 'url2'],
+      requirementsForAdoption: ['Ter espaço', 'Ser responsável'],
+      org: {
+        connect: {
+          id: 'org-01',
+        },
+      },
+    })
+
+    await petsRepository.create({
+      name: 'Luna',
+      description: 'Uma gatinha carinhosa',
+      energy: 'NORMAL',
+      environment: 'SMALL_INDOOR',
+      size: 'SMALL',
+      photos: ['url3', 'url4'],
+      requirementsForAdoption: ['Casa com telas'],
+      org: {
+        connect: {
+          id: 'org-01',
+        },
+      },
+    })
+
+    // Criar pet para organização de outra cidade
+    await petsRepository.create({
+      name: 'Thor',
+      description: 'Um cachorro grande e brincalhão',
+      energy: 'HIGH',
+      environment: 'LARGE_INDOOR',
+      size: 'LARGE',
+      photos: ['url5', 'url6'],
+      requirementsForAdoption: ['Casa grande', 'Tempo para exercícios'],
+      org: {
+        connect: {
+          id: 'org-01',
+        },
+      },
+    })
+
+    const { pets } = await sut.execute({
+      city: 'Duque de Caxias',
+      page: 1,
+      size: 'MEDIUM',
+      energy: 'HIGH',
+      environment: 'SMALL_INDOOR'
+    })
+
+    expect(pets).toHaveLength(1)
+    expect(pets).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: 'Alfredinho' }),
+      ]),
+    )
+  })
+
   it('should handle pagination correctly', async () => {
     // Criar mais de 20 pets para testar paginação
     for (let i = 1; i <= 25; i++) {
